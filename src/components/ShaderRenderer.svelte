@@ -62,13 +62,13 @@
 
 	function render(timestamp: number) {
 		uniforms.u_time.value = timestamp / 1000;
-		if (!didResize) renderer.render(scene, camera);
-		didResize = false;
+		renderer.render(scene, camera);
 	}
 
 	function animate(timestamp: number) {
-		render(timestamp);
+		if (!didResize) render(timestamp);
 		requestAnimationFrame(animate);
+		didResize = false;
 	}
 
 	// Updates the renderer size and the uniforms when the window is resized
@@ -85,7 +85,7 @@
 			.set(element.offsetWidth, element.offsetHeight)
 			.multiplyScalar(window.devicePixelRatio);
 
-		renderer.render(scene, camera);
+		render(performance.now());
 	}
 
 	onMount(init);
