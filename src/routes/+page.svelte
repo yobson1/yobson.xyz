@@ -2,6 +2,7 @@
 	import GlowCard from '../components/GlowCard.svelte';
 	import Avatar from '../components/Avatar.svelte';
 	import LinksList from '../components/LinksList.svelte';
+	import { version } from '$app/environment';
 </script>
 
 <GlowCard>
@@ -13,9 +14,12 @@
 			GitHub: 'https://github.com/yobson1',
 			Discord: 'https://discord.com/users/280102934111322112',
 			Twitch: 'https://www.twitch.tv/yobson',
-			YouTube: 'https://www.youtube.com/@yobson'
+			YouTube: 'https://www.youtube.com/@yobson',
+			Twitter: 'https://twitter.com/yobson8'
 		}}
 	/>
+	<!-- Version tag -->
+	<h3 class="version-tag">v{version}</h3>
 </GlowCard>
 
 <style>
@@ -37,5 +41,18 @@
 		border: none;
 		border-radius: 4px;
 		box-shadow: 0 0 4px #8f8f8f;
+	}
+
+	.version-tag {
+		color: #8f8f8f;
+		font-size: 12px;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		text-align: right;
+		padding-right: 1em;
 	}
 </style>
