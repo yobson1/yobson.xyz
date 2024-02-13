@@ -28,6 +28,6 @@ void main() // ------------ draw isovalues
     float n = noise(vec3(U,speed*u_time)),
           v = sin(6.28*10.*n);
     v = smoothstep(-1.,1., .7*abs(v)/fwidth(v));  // first try with (0.,1. was not so good )
-    float b = 0.85; // background darkness
+    float b = 0.9; // background darkness
     gl_FragColor = vec4(1.-v*b, 1.-v*b, 1.-v*b, 1);
 }
