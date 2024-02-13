@@ -32,6 +32,7 @@
 	"type": "module",
 	"dependencies": {
 		"@types/three": "^0.161.2",
+		"dotenv": "^16.4.3",
 		"three": "^0.161.0"
 	}
 }
