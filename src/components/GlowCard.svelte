@@ -16,10 +16,11 @@
 		const linkElements = Array.from(document.querySelectorAll<HTMLAnchorElement>('ul li a'));
 		linkElements[currentIndex].focus();
 		window.addEventListener('keydown', (event) => {
-			if (event.key === 'ArrowDown') {
+			if (event.key === 'ArrowDown' || event.key === 'ArrowRight' || event.key === 'Tab') {
+				event.preventDefault();
 				currentIndex = (currentIndex + 1) % linkElements.length;
 				linkElements[currentIndex].focus();
-			} else if (event.key === 'ArrowUp') {
+			} else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
 				currentIndex = (currentIndex - 1 + linkElements.length) % linkElements.length;
 				linkElements[currentIndex].focus();
 			}
