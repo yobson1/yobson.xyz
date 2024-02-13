@@ -1,5 +1,13 @@
 <script lang="ts">
-	import * as THREE from 'three';
+	import {
+		WebGLRenderer,
+		Scene,
+		OrthographicCamera,
+		PlaneGeometry,
+		Vector2,
+		ShaderMaterial,
+		Mesh
+	} from 'three';
 	import { onMount } from 'svelte';
 
 	export let vertShader: string;
@@ -10,12 +18,12 @@
 		container = el.firstChild as HTMLElement;
 	};
 
-	let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.OrthographicCamera;
+	let renderer: WebGLRenderer, scene: Scene, camera: OrthographicCamera;
 	let uniforms: Record<string, THREE.IUniform> = {};
 
 	async function init() {
 		// Initialize the renderer
-		renderer = new THREE.WebGLRenderer();
+		renderer = new WebGLRenderer();
 		renderer.setPixelRatio(window.devicePixelRatio);
 
 		// Add the renderer to our container
@@ -25,29 +33,29 @@
 		renderer.setSize(container.offsetWidth, container.offsetHeight);
 
 		// Initialize the scene
-		scene = new THREE.Scene();
-		camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-		const geometry = new THREE.PlaneGeometry(2, 2);
+		scene = new Scene();
+		camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
+		const geometry = new PlaneGeometry(2, 2);
 
 		// Define the shader uniforms
 		uniforms = {
 			u_time: { value: 0 },
 			u_resolution: {
-				value: new THREE.Vector2(container.offsetWidth, container.offsetHeight).multiplyScalar(
+				value: new Vector2(container.offsetWidth, container.offsetHeight).multiplyScalar(
 					window.devicePixelRatio
 				)
 			}
 		};
 
 		// Create the shader material
-		const material = new THREE.ShaderMaterial({
+		const material = new ShaderMaterial({
 			uniforms: uniforms,
 			vertexShader: vertShader,
 			fragmentShader: fragShader
 		});
 
 		// Create the mesh and add it to the scene
-		const mesh = new THREE.Mesh(geometry, material);
+		const mesh = new Mesh(geometry, material);
 		scene.add(mesh);
 
 		// Observer the container resize event
