@@ -13,7 +13,7 @@
 	let currentIndex = 0; // Tracks the currently focused link
 	onMount(() => {
 		// Move selection with arrow keys
-		const linkElements = document.querySelectorAll('ul li a') as NodeListOf<HTMLAnchorElement>;
+		const linkElements = Array.from(document.querySelectorAll<HTMLAnchorElement>('ul li a'));
 		linkElements[currentIndex].focus();
 		window.addEventListener('keydown', (event) => {
 			if (event.key === 'ArrowDown') {
@@ -22,6 +22,12 @@
 			} else if (event.key === 'ArrowUp') {
 				currentIndex = (currentIndex - 1 + linkElements.length) % linkElements.length;
 				linkElements[currentIndex].focus();
+			}
+		});
+
+		window.addEventListener('focusin', (event) => {
+			if (event.target instanceof HTMLAnchorElement) {
+				currentIndex = linkElements.indexOf(event.target);
 			}
 		});
 	});
