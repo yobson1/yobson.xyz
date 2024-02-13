@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-dependencies:
-  dotenv:
-    specifier: ^16.4.3
-    version: 16.4.3
-
 devDependencies:
   '@sveltejs/adapter-node':
     specifier: ^4.0.1
@@ -28,6 +23,9 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^6.0.0
     version: 6.21.0(eslint@8.56.0)(typescript@5.3.3)
+  dotenv:
+    specifier: ^16.4.3
+    version: 16.4.3
   eslint:
     specifier: ^8.56.0
     version: 8.56.0
@@ -1042,7 +1040,7 @@ packages:
   /dotenv@16.4.3:
     resolution: {integrity: sha512-II98GFrje5psQTSve0E7bnwMFybNLqT8Vu8JIFWRjsE3khyNUm/loZupuy5DVzG2IXf/ysxvrixYOQnM6mjD3A==}
     engines: {node: '>=12'}
-    dev: false
+    dev: true
 
   /es6-promise@3.3.1:
     resolution: {integrity: sha512-SOp9Phqvqn7jtEUxPWdWfWoLmyt2VaJ6MpvP9Comy1MceMXqE6bxvaTu4iaxpYYPzhny28Lc+M87/c2cPK6lDg==}
