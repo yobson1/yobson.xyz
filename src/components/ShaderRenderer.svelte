@@ -1,58 +1,79 @@
 <script lang="ts">
-	import * as THREE from 'three';
 	import { onMount } from 'svelte';
 
-	export let vertShader: string;
-	export let fragShader: string;
+	export let vertShaderSource: string;
+	export let fragShaderSource: string;
 
 	let container: HTMLElement;
 	const firstChild = (el: HTMLElement) => {
 		container = el.firstChild as HTMLElement;
 	};
 
-	let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.OrthographicCamera;
-	let uniforms: Record<string, THREE.IUniform> = {};
+	// Shader program
+	let shaderProgram: WebGLProgram | null;
+	let positionAttributeLocation: number;
+	let resolutionUniformLocation: WebGLUniformLocation;
+	let timeUniformLocation: WebGLUniformLocation;
+	let vertexBuffer: WebGLBuffer;
 
-	async function init() {
-		// Initialize the renderer
-		renderer = new THREE.WebGLRenderer();
-		renderer.setPixelRatio(window.devicePixelRatio);
+	// WebGL context
+	let gl: WebGLRenderingContext;
 
-		// Add the renderer to our container
-		container.appendChild(renderer.domElement);
+	function init() {
+		// Create canvas
+		const canvas = document.createElement('canvas');
+		container.appendChild(canvas);
 
-		// Size the renderer to the container
-		renderer.setSize(container.offsetWidth, container.offsetHeight);
+		// Get WebGL context
+		let ctx = canvas.getContext('webgl');
+		if (!ctx) {
+			console.error('WebGL not supported');
+			return;
+		}
 
-		// Initialize the scene
-		scene = new THREE.Scene();
-		camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-		const geometry = new THREE.PlaneGeometry(2, 2);
+		gl = ctx;
 
-		// Define the shader uniforms
-		uniforms = {
-			u_time: { value: 0 },
-			u_resolution: {
-				value: new THREE.Vector2(container.offsetWidth, container.offsetHeight).multiplyScalar(
-					window.devicePixelRatio
-				)
-			}
-		};
+		// Enable extensions
+		gl.getExtension('OES_standard_derivatives');
+		gl.getExtension('EXT_shader_texture_lod');
 
-		// Create the shader material
-		const material = new THREE.ShaderMaterial({
-			uniforms: uniforms,
-			vertexShader: vertShader,
-			fragmentShader: fragShader
-		});
+		// Set canvas & viewport size
+		canvas.width = container.offsetWidth;
+		canvas.height = container.offsetHeight;
+		gl.viewport(0, 0, canvas.width, canvas.height);
 
-		// Create the mesh and add it to the scene
-		const mesh = new THREE.Mesh(geometry, material);
-		scene.add(mesh);
+		// Create shader program
+		const vertShader = createShader(gl, gl.VERTEX_SHADER, vertShaderSource);
+		const fragShader = createShader(gl, gl.FRAGMENT_SHADER, fragShaderSource);
+
+		if (!vertShader || !fragShader) {
+			console.error('Shader not created');
+			return;
+		}
+
+		shaderProgram = createProgram(gl, vertShader, fragShader);
+
+		if (!shaderProgram) {
+			console.error('Shader program not created');
+			return;
+		}
+
+		// Get attribute and uniform locations
+		positionAttributeLocation = gl.getAttribLocation(shaderProgram, 'position');
+		resolutionUniformLocation = gl.getUniformLocation(shaderProgram, 'u_resolution')!;
+		timeUniformLocation = gl.getUniformLocation(shaderProgram, 'u_time')!;
+
+		// Create vertex buffer
+		vertexBuffer = gl.createBuffer()!;
+		gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+		const vertices = [-1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0];
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
 		// Observer the container resize event
 		new ResizeObserver(onElementResized).observe(container);
-		animate(0);
+
+		// Start animation loop
+		animate(performance.now());
 	}
 
 	// A hack to get around the fact that ResizeObserver callbacks run after rAF
@@ -60,37 +81,85 @@
 	// https://github.com/w3c/csswg-drafts/issues/9717
 	let didResize: boolean = false;
 
-	function render(timestamp: number) {
-		uniforms.u_time.value = timestamp / 1000;
-		renderer.render(scene, camera);
-	}
-
 	function animate(timestamp: number) {
-		if (!didResize) render(timestamp);
+		if (!didResize) render(timestamp / 1000);
 		requestAnimationFrame(animate);
 		didResize = false;
 	}
 
-	// Updates the renderer size and the uniforms when the window is resized
+	function render(time: number) {
+		// Clear canvas
+		gl.clearColor(0, 0, 0, 1);
+		gl.clear(gl.COLOR_BUFFER_BIT);
+
+		// Use shader program
+		gl.useProgram(shaderProgram);
+
+		// Set resolution uniform
+		gl.uniform2f(
+			resolutionUniformLocation,
+			gl.canvas.width * window.devicePixelRatio,
+			gl.canvas.height * window.devicePixelRatio
+		);
+		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+		// Set time uniform
+		gl.uniform1f(timeUniformLocation, time);
+
+		// Bind vertex buffer and attribute
+		gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+		gl.enableVertexAttribArray(positionAttributeLocation);
+		gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+		// Draw triangles
+		gl.drawArrays(gl.TRIANGLES, 0, 6);
+	}
+
+	// Helper functions
+	function createShader(gl: WebGLRenderingContext, type: number, source: string) {
+		const shader = gl.createShader(type)!;
+		gl.shaderSource(shader, source);
+		gl.compileShader(shader);
+		if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+			console.error('Shader compilation error:', gl.getShaderInfoLog(shader));
+			gl.deleteShader(shader);
+			return null;
+		}
+		return shader;
+	}
+
+	function createProgram(
+		gl: WebGLRenderingContext,
+		vertexShader: WebGLShader,
+		fragmentShader: WebGLShader
+	) {
+		const program = gl.createProgram()!;
+		gl.attachShader(program, vertexShader);
+		gl.attachShader(program, fragmentShader);
+		gl.linkProgram(program);
+		if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+			console.error('Program linking error:', gl.getProgramInfoLog(program));
+			gl.deleteProgram(program);
+			return null;
+		}
+		return program;
+	}
+
 	function onElementResized(resizes: ResizeObserverEntry[]) {
 		didResize = true;
 		const resize = resizes[0];
 		const element = resize.target as HTMLElement;
 
 		// Update the renderer
-		renderer.setSize(element.offsetWidth, element.offsetHeight);
+		gl.canvas.width = element.offsetWidth;
+		gl.canvas.height = element.offsetHeight;
 
-		// Update the resolution uniform
-		uniforms.u_resolution.value
-			.set(element.offsetWidth, element.offsetHeight)
-			.multiplyScalar(window.devicePixelRatio);
-
-		render(performance.now());
+		render(performance.now() / 1000);
 	}
 
 	onMount(init);
 </script>
 
 <div use:firstChild>
-	<slot name="shader-container" />
+	<slot />
 </div>

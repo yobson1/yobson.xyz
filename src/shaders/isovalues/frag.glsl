@@ -1,6 +1,9 @@
 // yoinked from https://www.shadertoy.com/view/MdfcRS
 // see also analytical derivatives version: https://www.shadertoy.com/view/XdlyzS
 
+#extension GL_EXT_shader_texture_lod : enable
+#extension GL_OES_standard_derivatives : enable
+precision highp float;
 uniform vec2 u_resolution;
 uniform float u_time;
 
