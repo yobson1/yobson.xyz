@@ -1,9 +1,7 @@
 <script>
-	import '../app.css';
-
-	import ShaderRenderer from '../components/ShaderRenderer.svelte';
-	import vertShaderSource from '../shaders/isovalues/vert.glsl?raw';
-	import fragShaderSource from '../shaders/isovalues/frag.glsl?raw';
+	import ShaderRenderer from '$lib/components/ShaderRenderer.svelte';
+	import vertShaderSource from '$lib/shaders/isovalues/vert.glsl?raw';
+	import fragShaderSource from '$lib/shaders/isovalues/frag.glsl?raw';
 </script>
 
 <ShaderRenderer {vertShaderSource} {fragShaderSource}>

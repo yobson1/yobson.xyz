@@ -1,7 +1,7 @@
 <script lang="ts">
-	import GlowCard from '../components/GlowCard.svelte';
-	import Avatar from '../components/Avatar.svelte';
-	import LinksList from '../components/LinksList.svelte';
+	import GlowCard from '$lib/components/GlowCard.svelte';
+	import Avatar from '$lib/components/Avatar.svelte';
+	import LinksList from '$lib/components/LinksList.svelte';
 	import { version } from '$app/environment';
 </script>
 
