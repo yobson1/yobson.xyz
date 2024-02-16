@@ -16,6 +16,10 @@
 				currentIndex = (currentIndex + 1) % linkElements.length;
 			} else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
 				currentIndex = (currentIndex - 1 + linkElements.length) % linkElements.length;
+			} else if (event.key === 'Home') {
+				currentIndex = 0;
+			} else if (event.key === 'End') {
+				currentIndex = linkElements.length - 1;
 			}
 			linkElements[currentIndex].focus();
 		});
