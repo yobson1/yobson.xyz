@@ -30,8 +30,7 @@
 		window.addEventListener('keydown', (event) => {
 			if (!isFocusedElementOurLink()) return;
 
-			if (event.key === 'ArrowDown' || event.key === 'ArrowRight' || event.key === 'Tab') {
-				event.preventDefault();
+			if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
 				currentIndex = moveIndex(1);
 			} else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
 				currentIndex = moveIndex(-1);
@@ -39,6 +38,13 @@
 				currentIndex = 0;
 			} else if (event.key === 'End') {
 				currentIndex = linkElements.length - 1;
+			} else if (event.key == 'PageUp') {
+				currentIndex = 0;
+			} else if (event.key == 'PageDown') {
+				currentIndex = linkElements.length - 1;
+			} else if (event.key == 'Escape') {
+				linkElements[currentIndex].blur();
+				return;
 			}
 
 			// Focus the next link that starts with the key we pressed
