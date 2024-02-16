@@ -87,7 +87,11 @@
 		didResize = false;
 	}
 
+	let hasRendered = false;
 	function render(time: number) {
+		// Only render while focused, unless it's our first render
+		if (!document.hasFocus() && hasRendered) return;
+
 		// Clear canvas
 		gl.clearColor(0, 0, 0, 1);
 		gl.clear(gl.COLOR_BUFFER_BIT);
@@ -113,6 +117,8 @@
 
 		// Draw triangles
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+		hasRendered = true;
 	}
 
 	// Helper functions
