@@ -6,7 +6,12 @@
 </script>
 
 <GlowCard>
-	<Avatar round src="https://avatars.githubusercontent.com/u/45133474" alt="yobson" />
+	<Avatar
+		round
+		src="https://avatars.githubusercontent.com/u/45133474?s=96"
+		alt="yobson"
+		--width="96px"
+	/>
 	<h2>yobson</h2>
 	<hr />
 	<LinksList
