@@ -21,6 +21,17 @@
 			} else if (event.key === 'End') {
 				currentIndex = linkElements.length - 1;
 			}
+
+			// Focus the next link that starts with the key we pressed
+			for (let i = 1; i <= linkElements.length; i++) {
+				const indexToCheck = (currentIndex + i) % linkElements.length;
+				const link = linkElements[indexToCheck];
+				if (link.textContent?.toLowerCase().startsWith(event.key)) {
+					currentIndex = indexToCheck;
+					break;
+				}
+			}
+
 			linkElements[currentIndex].focus();
 		});
 
