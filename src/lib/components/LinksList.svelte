@@ -7,20 +7,34 @@
 		// Move selection with arrow keys
 		const linkElements = Array.from(document.querySelectorAll<HTMLAnchorElement>('ul li a'));
 		linkElements[currentIndex].focus();
-		window.addEventListener('keydown', (event) => {
+
+		// Helper functions
+		function isFocusedElementOurLink() {
 			const focusedElement = document.activeElement;
-			if (
-				!focusedElement ||
-				!(focusedElement instanceof HTMLAnchorElement) ||
-				!linkElements.includes(focusedElement)
-			)
-				return;
+			return (
+				focusedElement &&
+				focusedElement instanceof HTMLAnchorElement &&
+				linkElements.includes(focusedElement)
+			);
+		}
+
+		function moveIndex(direction: number) {
+			return (currentIndex + direction + linkElements.length) % linkElements.length;
+		}
+
+		function focusCurrentIndex() {
+			const curLink = linkElements[currentIndex];
+			if (curLink && curLink != document.activeElement) curLink.focus();
+		}
+
+		window.addEventListener('keydown', (event) => {
+			if (!isFocusedElementOurLink()) return;
 
 			if (event.key === 'ArrowDown' || event.key === 'ArrowRight' || event.key === 'Tab') {
 				event.preventDefault();
-				currentIndex = (currentIndex + 1) % linkElements.length;
+				currentIndex = moveIndex(1);
 			} else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
-				currentIndex = (currentIndex - 1 + linkElements.length) % linkElements.length;
+				currentIndex = moveIndex(-1);
 			} else if (event.key === 'Home') {
 				currentIndex = 0;
 			} else if (event.key === 'End') {
@@ -37,10 +51,19 @@
 				}
 			}
 
-			const toFocus = linkElements[currentIndex];
-			if (toFocus && toFocus !== focusedElement) {
-				toFocus.focus();
+			focusCurrentIndex();
+		});
+
+		window.addEventListener('wheel', (event) => {
+			if (!isFocusedElementOurLink()) return;
+
+			if (event.deltaY > 0) {
+				currentIndex = moveIndex(1);
+			} else if (event.deltaY < 0) {
+				currentIndex = moveIndex(-1);
 			}
+
+			focusCurrentIndex();
 		});
 
 		window.addEventListener('focusin', (event) => {
