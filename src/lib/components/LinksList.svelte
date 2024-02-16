@@ -45,7 +45,7 @@
 			for (let i = 1; i <= linkElements.length; i++) {
 				const indexToCheck = (currentIndex + i) % linkElements.length;
 				const link = linkElements[indexToCheck];
-				if (link.textContent?.toLowerCase().startsWith(event.key)) {
+				if (link.textContent?.toLowerCase().startsWith(event.key.toLowerCase())) {
 					currentIndex = indexToCheck;
 					break;
 				}
