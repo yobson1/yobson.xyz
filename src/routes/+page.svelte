@@ -10,7 +10,7 @@
 		round
 		src="https://avatars.githubusercontent.com/u/45133474?s=96"
 		alt="yobson"
-		--width="96px"
+		width={96}
 	/>
 	<h2>yobson</h2>
 	<hr />
