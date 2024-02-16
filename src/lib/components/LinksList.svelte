@@ -21,6 +21,8 @@
 		window.addEventListener('focusin', (event) => {
 			if (event.target instanceof HTMLAnchorElement) {
 				currentIndex = linkElements.indexOf(event.target);
+			} else {
+				currentIndex = 0;
 			}
 		});
 
