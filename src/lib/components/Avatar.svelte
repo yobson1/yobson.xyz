@@ -9,7 +9,7 @@
 <style>
 	img {
 		margin-top: 12px;
-		width: 100px;
+		width: var(--width, 100px);
 		position: relative;
 		border: 2px solid #8f8f8f;
 	}
