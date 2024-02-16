@@ -32,7 +32,10 @@
 				}
 			}
 
-			linkElements[currentIndex].focus();
+			const toFocus = linkElements[currentIndex];
+			if (toFocus && toFocus !== focusedElement) {
+				toFocus.focus();
+			}
 		});
 
 		window.addEventListener('focusin', (event) => {
