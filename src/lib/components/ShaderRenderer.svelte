@@ -77,7 +77,6 @@
 
 		// Restart animation loop whenever we regain focus
 		window.addEventListener('focus', (event) => {
-			console.log(event);
 			if (event.target === window) animate(performance.now());
 		});
 	}
