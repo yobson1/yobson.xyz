@@ -6,7 +6,7 @@
 	export let height = width;
 </script>
 
-<img {src} {alt} {width} {height} style="--width {width}px" class:round />
+<img {src} {alt} {width} {height} style="--width: {width}px" class:round />
 
 <style>
 	img {
