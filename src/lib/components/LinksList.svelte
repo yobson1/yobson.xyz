@@ -44,7 +44,7 @@
 		});
 
 		window.addEventListener('focusin', (event) => {
-			if (event.target instanceof HTMLAnchorElement) {
+			if (event.target instanceof HTMLAnchorElement && linkElements.includes(event.target)) {
 				currentIndex = linkElements.indexOf(event.target);
 			} else {
 				currentIndex = 0;
