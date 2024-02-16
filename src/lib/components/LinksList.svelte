@@ -9,7 +9,12 @@
 		linkElements[currentIndex].focus();
 		window.addEventListener('keydown', (event) => {
 			const focusedElement = document.activeElement;
-			if (!focusedElement || !(focusedElement instanceof HTMLAnchorElement)) return;
+			if (
+				!focusedElement ||
+				!(focusedElement instanceof HTMLAnchorElement) ||
+				!linkElements.includes(focusedElement)
+			)
+				return;
 
 			if (event.key === 'ArrowDown' || event.key === 'ArrowRight' || event.key === 'Tab') {
 				event.preventDefault();
