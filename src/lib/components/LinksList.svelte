@@ -23,6 +23,11 @@
 				currentIndex = linkElements.indexOf(event.target);
 			}
 		});
+
+		// Disable focus loss when clicking away
+		window.addEventListener('pointerdown', (event) => {
+			event.preventDefault();
+		});
 	});
 </script>
 
