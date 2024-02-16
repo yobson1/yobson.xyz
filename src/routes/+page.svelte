@@ -15,7 +15,8 @@
 			Discord: 'https://discord.com/users/280102934111322112',
 			Twitch: 'https://www.twitch.tv/yobson',
 			YouTube: 'https://www.youtube.com/@yobson',
-			Twitter: 'https://twitter.com/yobson8'
+			Twitter: 'https://twitter.com/yobson8',
+			buymeacoffee: 'https://www.buymeacoffee.com/yobson'
 		}}
 	/>
 	<!-- Version tag -->
