@@ -8,14 +8,16 @@
 		const linkElements = Array.from(document.querySelectorAll<HTMLAnchorElement>('ul li a'));
 		linkElements[currentIndex].focus();
 		window.addEventListener('keydown', (event) => {
+			const focusedElement = document.activeElement;
+			if (!focusedElement || !(focusedElement instanceof HTMLAnchorElement)) return;
+
 			if (event.key === 'ArrowDown' || event.key === 'ArrowRight' || event.key === 'Tab') {
 				event.preventDefault();
 				currentIndex = (currentIndex + 1) % linkElements.length;
-				linkElements[currentIndex].focus();
 			} else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
 				currentIndex = (currentIndex - 1 + linkElements.length) % linkElements.length;
-				linkElements[currentIndex].focus();
 			}
+			linkElements[currentIndex].focus();
 		});
 
 		window.addEventListener('focusin', (event) => {
