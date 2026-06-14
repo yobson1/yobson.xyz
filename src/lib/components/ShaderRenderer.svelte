@@ -5,9 +5,6 @@
 	export let fragShaderSource: string;
 
 	let container: HTMLElement;
-	const firstChild = (el: HTMLElement) => {
-		container = el.firstChild as HTMLElement;
-	};
 
 	// Shader program
 	let shaderProgram: WebGLProgram | null;
@@ -165,6 +162,19 @@
 	onMount(init);
 </script>
 
-<div use:firstChild>
+<div bind:this={container} class="shader-container">
 	<slot />
 </div>
+
+<style>
+	.shader-container {
+		position: fixed;
+		top: 0;
+		left: 0;
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
+	}
+</style>
